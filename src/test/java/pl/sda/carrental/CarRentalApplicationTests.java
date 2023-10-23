@@ -1,4 +1,4 @@
-package pl.sda.CarRental;
+package pl.sda.carrental;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
