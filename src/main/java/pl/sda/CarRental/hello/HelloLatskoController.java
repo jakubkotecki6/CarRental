@@ -1,4 +1,4 @@
-package pl.sda.CarRental.hello;
+package pl.sda.carrental.hello;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
