@@ -9,12 +9,18 @@ import pl.sda.carrental.repository.CarRentalRepository;
 @RequiredArgsConstructor
 public class CarRentalService {
     private final CarRentalRepository carRentalRepository;
+
     public CarRentalModel getCarRental() {
         return carRentalRepository.findAll().stream().findFirst().orElseThrow(RuntimeException::new);
     }
 
     public void saveCarRental(CarRentalModel carRental) {
         carRentalRepository.save(carRental);
+    }
+
+    public void editCarRental(CarRentalModel carRentalModel) {
+        carRentalRepository.deleteAll();
+        carRentalRepository.save(carRentalModel);
     }
 
     public void deleteCarRental() {

@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "car_rental")
 public class CarRentalModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

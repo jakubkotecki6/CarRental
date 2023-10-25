@@ -1,32 +1,30 @@
 package pl.sda.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.sda.carrental.model.CarRentalModel;
 import pl.sda.carrental.service.CarRentalService;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/carRental")
 public class CarRentalController {
     private final CarRentalService carRentalService;
-    @GetMapping("/getCarRental")
+    @GetMapping
     public CarRentalModel getCarRental(){
         return carRentalService.getCarRental();
     }
-    @PutMapping("/addCarRental")
-    public void putAddCarRental(CarRentalModel carRentalModel){
+    @PostMapping
+    public void addCarRental(@RequestBody CarRentalModel carRentalModel){
         carRentalService.saveCarRental(carRentalModel);
     }
 
-    @PutMapping("/editCarRental")
-    public void putEditCarRental(CarRentalModel carRentalModel){
-        carRentalService.saveCarRental(carRentalModel);
+    @PutMapping
+    public void editCarRental(@RequestBody CarRentalModel carRentalModel){
+        carRentalService.editCarRental(carRentalModel);
     }
 
-    @DeleteMapping("/deleteCarRental")
+    @DeleteMapping
     public void deleteCarRental(){
         carRentalService.deleteCarRental();
     }
