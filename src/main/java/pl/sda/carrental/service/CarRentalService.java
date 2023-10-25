@@ -5,14 +5,12 @@ import org.springframework.stereotype.Service;
 import pl.sda.carrental.model.CarRentalModel;
 import pl.sda.carrental.repository.CarRentalRepository;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class CarRentalService {
     private final CarRentalRepository carRentalRepository;
     public CarRentalModel getCarRental() {
-        return carRentalRepository.find();
+        return carRentalRepository.findAll().stream().findFirst().orElseThrow(RuntimeException::new);
     }
 
     public void saveCarRental(CarRentalModel carRental) {
