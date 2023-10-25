@@ -30,14 +30,13 @@ public class BranchController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<Void> modifyBranch(@RequestBody BranchModel branch) {
+    @PutMapping("/{id}")
+    public ResponseEntity<BranchModel> modifyBranch(@PathVariable Long id, @RequestBody BranchModel branch) {
         Optional<BranchModel> foundBranch = branchService.getAllBranches().stream()
-                .filter(branchToModify -> branchToModify.getBranch_id() == branch.getBranch_id()).findFirst();
+                .filter(branchToModify -> branchToModify.getBranch_id() == id).findFirst();
         if(foundBranch.isPresent()) {
-            branchService.removeBranch(foundBranch.get());
-            branchService.addBranch(foundBranch.get());
-            return ResponseEntity.ok().build();
+            BranchModel edited = branchService.editBranch(id, branch);
+            return ResponseEntity.ok(edited);
         } else {
             return ResponseEntity.notFound().build();
         }

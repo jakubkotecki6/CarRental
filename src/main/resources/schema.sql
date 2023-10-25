@@ -12,7 +12,7 @@ CREATE TABLE employee_model
     employee_id INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
     surname     VARCHAR(255) NOT NULL,
-    position    VARCHAR(255) NOT NULL,
-    branch_id   INTEGER,
-    FOREIGN KEY (branch_id) REFERENCES branch_model (branch_id)
+    position    VARCHAR(255) NOT NULL
+--     branch_id   INTEGER,
+--     FOREIGN KEY (branch_id) REFERENCES branch_model (branch_id)
 );

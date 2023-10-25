@@ -17,12 +17,11 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<List<EmployeeModel>> getEmployees() {
-        try {
-            List<EmployeeModel> allEmployees = employeeService.getAllEmployees();
-            return ResponseEntity.ok(allEmployees);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        //try {
+            return ResponseEntity.ok(employeeService.getAllEmployees());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
     }
 
     @PostMapping

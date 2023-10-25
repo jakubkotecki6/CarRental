@@ -27,7 +27,7 @@ public class EmployeeService {
         edit.setName(employee.getName());
         edit.setSurname(employee.getSurname());
         edit.setPosition(employee.getPosition());
-        edit.setBranch(employee.getBranch());
+        //edit.setBranch(employee.getBranch());
 
         return employeeRepository.save(edit);
     }

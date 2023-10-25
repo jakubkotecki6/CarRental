@@ -16,7 +16,7 @@ public class EmployeeModel {
     private String name;
     private String surname;
     private Position position;
-    @ManyToOne
-    private BranchModel branch;
+//    @ManyToOne
+//    private BranchModel branch;
 
 }

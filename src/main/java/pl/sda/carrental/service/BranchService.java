@@ -23,4 +23,12 @@ public class BranchService {
     public void removeBranch(BranchModel branchModel) {
         branchRepository.delete(branchModel);
     }
+
+    public BranchModel editBranch(Long id, BranchModel branchModel) {
+        BranchModel found = branchRepository.findById(id).get();
+        found.setAddress(branchModel.getAddress());
+
+        return branchRepository.save(found);
+
+    }
 }
