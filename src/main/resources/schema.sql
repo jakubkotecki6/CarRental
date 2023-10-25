@@ -4,4 +4,4 @@ CREATE TABLE car_rental (
     internet_domain VARCHAR(255) NOT NULL,
     adress VARCHAR(255) NOT NULL,
     owner VARCHAR(255) NOT NULL
-)
+);
