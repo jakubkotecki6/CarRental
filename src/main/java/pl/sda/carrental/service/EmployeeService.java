@@ -36,6 +36,8 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
+        employeeRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No employee under that ID!"));
         employeeRepository.deleteById(id);
     }
 }
