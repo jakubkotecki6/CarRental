@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS employee_model;
 DROP TABLE IF EXISTS branch_model;
+DROP TABLE IF EXISTS car_rental;
 
 CREATE TABLE branch_model
 (
@@ -17,10 +18,9 @@ CREATE TABLE employee_model
 --     FOREIGN KEY (branch_id) REFERENCES branch_model (branch_id)
 );
 
-DROP TABLE IF EXISTS car_rental;
 CREATE TABLE car_rental
 (
-    id      INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    id      BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     name    VARCHAR(255) NOT NULL,
     domain  VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
