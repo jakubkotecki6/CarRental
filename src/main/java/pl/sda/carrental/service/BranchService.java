@@ -2,6 +2,7 @@ package pl.sda.carrental.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.sda.carrental.ObjectNotFoundInRepositoryException;
 import pl.sda.carrental.model.BranchModel;
 import pl.sda.carrental.repository.BranchRepository;
 
@@ -30,5 +31,11 @@ public class BranchService {
 
         return branchRepository.save(found);
 
+    }
+
+    // how to handle exceptions better
+    public BranchModel getById(Long id) {
+        return branchRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under that ID!"));
     }
 }

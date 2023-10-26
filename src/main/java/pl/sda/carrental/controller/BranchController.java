@@ -21,6 +21,11 @@ public class BranchController {
         return ResponseEntity.ok(branchService.getAllBranches());
     }
 
+    @GetMapping("/{id}")
+    public BranchModel getById(@PathVariable Long id) {
+        return branchService.getById(id);
+    }
+
     @PostMapping
     public ResponseEntity<Void> addBranch(@RequestBody BranchModel branch) {
         if(branchService.addBranch(branch).equals(branch)) {
