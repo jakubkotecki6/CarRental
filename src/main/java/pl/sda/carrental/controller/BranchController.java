@@ -17,8 +17,8 @@ public class BranchController {
     private final BranchService branchService;
 
     @GetMapping
-    public ResponseEntity<List<BranchModel>> getBranches() {
-        return ResponseEntity.ok(branchService.getAllBranches());
+    public List<BranchModel> getBranches() {
+        return branchService.getAllBranches();
     }
 
     @GetMapping("/{id}")
@@ -27,34 +27,17 @@ public class BranchController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addBranch(@RequestBody BranchModel branch) {
-        if(branchService.addBranch(branch).equals(branch)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public void addBranch(@RequestBody BranchModel branch) {
+        branchService.addBranch(branch);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BranchModel> modifyBranch(@PathVariable Long id, @RequestBody BranchModel branch) {
-        Optional<BranchModel> foundBranch = branchService.getAllBranches().stream()
-                .filter(branchToModify -> branchToModify.getBranch_id() == id).findFirst();
-        if(foundBranch.isPresent()) {
-            BranchModel edited = branchService.editBranch(id, branch);
-            return ResponseEntity.ok(edited);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public BranchModel modifyBranch(@PathVariable Long id, @RequestBody BranchModel branch) {
+            return branchService.editBranch(id, branch);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeBranch(@PathVariable Long id) {
-        Optional<BranchModel> found = branchService.getAllBranches().stream().filter(branch -> branch.getBranch_id() == id).findFirst();
-        if(found.isPresent()) {
-            branchService.removeBranch(found.get());
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void removeBranch(@PathVariable Long id) {
+            branchService.removeBranch(id);
     }
 }

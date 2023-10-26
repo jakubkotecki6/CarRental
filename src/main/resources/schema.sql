@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS car_rental;
 CREATE TABLE branch_model
 (
     branch_id BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     address   VARCHAR(255) NOT NULL
 );
 

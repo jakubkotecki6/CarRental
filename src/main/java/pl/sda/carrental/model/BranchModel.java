@@ -19,6 +19,7 @@ public class BranchModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long branch_id;
+    private String name;
     private String address;
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
 //    private Set<EmployeeModel> employees = new HashSet<>();
