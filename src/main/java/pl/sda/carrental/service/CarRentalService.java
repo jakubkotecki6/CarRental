@@ -33,6 +33,8 @@ public class CarRentalService {
     }
 
     public void deleteCarRental() {
+        carRentalRepository.findAll().stream().findFirst().orElseThrow(() -> new ObjectNotFoundInRepositoryException("There is no car rental company"));
+
         carRentalRepository.deleteAll();
     }
 }
