@@ -32,4 +32,12 @@ CREATE TABLE employee_model
     FOREIGN KEY (branch_id) REFERENCES branch_model (branch_id)
 );
 
-
+DROP TABLE IF EXISTS client_model;
+CREATE TABLE client_model
+(
+    client_id      BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    name    VARCHAR(255) NOT NULL,
+    surname  VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    email   VARCHAR(255) NOT NULL
+);
