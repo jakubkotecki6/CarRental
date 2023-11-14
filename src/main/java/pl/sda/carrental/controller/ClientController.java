@@ -2,7 +2,6 @@ package pl.sda.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.carrental.model.BranchModel;
 import pl.sda.carrental.model.ClientModel;
 import pl.sda.carrental.service.ClientService;
 
