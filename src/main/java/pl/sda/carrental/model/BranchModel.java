@@ -21,6 +21,7 @@ public class BranchModel {
     private Long branch_id;
     private String name;
     private String address;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "branch")
-//    private Set<EmployeeModel> employees = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "branch_id")
+    private Set<EmployeeModel> employees = new HashSet<>();
 }

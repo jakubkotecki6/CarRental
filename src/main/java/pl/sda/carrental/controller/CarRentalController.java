@@ -1,5 +1,6 @@
 package pl.sda.carrental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.carrental.model.CarRentalModel;
@@ -15,7 +16,7 @@ public class CarRentalController {
         return carRentalService.getCarRental();
     }
     @PostMapping
-    public void addCarRental(@RequestBody CarRentalModel carRentalModel){
+    public void addCarRental(@RequestBody @Valid CarRentalModel carRentalModel){
         carRentalService.saveCarRental(carRentalModel);
     }
 

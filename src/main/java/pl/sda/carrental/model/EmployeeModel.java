@@ -1,6 +1,7 @@
 package pl.sda.carrental.model;
 
 import jakarta.persistence.*;
+import jdk.jfr.Name;
 import lombok.*;
 import pl.sda.carrental.model.enums.Position;
 
@@ -18,5 +19,4 @@ public class EmployeeModel {
     private Position position;
 //    @ManyToOne
 //    private BranchModel branch;
-
 }
