@@ -14,8 +14,7 @@ import java.util.List;
 public class CarController {
     private final CarService carService;
 
-    @GetMapping
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public CarModel getCarById(@PathVariable Long id) {
         return carService.getCarById(id);
     }
@@ -30,12 +29,10 @@ public class CarController {
         carService.addCar(carModel);
     }
 
-    @PutMapping
-    @RequestMapping("/{id}")
+    @PutMapping("/{id}")
     public void editCar(@PathVariable Long id, @RequestBody @Valid CarModel carModel) {
         carService.editCar(id, carModel);
     }
-
 
     @DeleteMapping("/{id}")
     public void deleteCar(@PathVariable Long id) {

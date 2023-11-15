@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.sda.carrental.model.enums.Status;
 
+import java.math.BigInteger;
+
 @Entity
 @Getter
 @Setter
@@ -18,7 +20,7 @@ import pl.sda.carrental.model.enums.Status;
 public class CarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long car_id;
     private String make;
     private String model;
     private String bodyStyle;
@@ -26,6 +28,6 @@ public class CarModel {
     private String colour;
     private int mileage;
     private Status status;
-    private double price;
+    private BigInteger price;
 
 }

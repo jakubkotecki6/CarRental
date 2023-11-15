@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS car_rental;
-DROP TABLE IF EXISTS employee_model;
 DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS employee_model;
 DROP TABLE IF EXISTS branch_model;
+DROP TABLE IF EXISTS car_rental;
 
 CREATE TABLE car_rental
 (
@@ -55,4 +55,18 @@ CREATE TABLE reservation
     end_branch_id   BIGINT,
     FOREIGN KEY (start_branch_id) REFERENCES branch_model (branch_id),
     FOREIGN KEY (end_branch_id) REFERENCES branch_model (branch_id)
+);
+
+DROP TABLE IF EXISTS car_model;
+CREATE TABLE car_model
+(
+    car_id BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    make        VARCHAR(255) NOT NULL,
+    model          VARCHAR(255) NOT NULL,
+    body_style       VARCHAR(255) NOT NULL,
+    year   INT,
+    colour         VARCHAR(255) NOT NULL,
+    mileage   INT,
+    status          TINYINT NOT NULL,
+    price           DECIMAL(7, 2) NOT NULL
 );

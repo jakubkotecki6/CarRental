@@ -30,7 +30,7 @@ public class CarService {
 
     public void editCar(Long id, CarModel car) {
         CarModel editedCar = carRepository.findById(id).orElseThrow(() -> new ObjectNotFoundInRepositoryException(""));
-        editedCar.setId(id);
+        editedCar.setCar_id(id);
         editedCar.setMake(car.getMake());
         editedCar.setModel(car.getModel());
         editedCar.setBodyStyle(car.getBodyStyle());
