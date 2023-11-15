@@ -6,6 +6,8 @@ import pl.sda.carrental.ObjectNotFoundInRepositoryException;
 import pl.sda.carrental.model.CarModel;
 import pl.sda.carrental.repository.CarRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CarService {
@@ -15,13 +17,20 @@ public class CarService {
         return carRepository.findById(id).orElseThrow(() -> new ObjectNotFoundInRepositoryException("There is no car with selected id"));
     }
 
+    public List<CarModel> getCars() {
+        if (carRepository.findAll().isEmpty()){
+            throw new ObjectNotFoundInRepositoryException("Database is Empty");
+        }
+        return carRepository.findAll();
+    }
+
     public void addCar(CarModel car) {
         carRepository.save(car);
     }
 
-    public void editCar(CarModel car) {
-        CarModel editedCar = carRepository.findById(car.getId()).orElseThrow(() -> new ObjectNotFoundInRepositoryException(""));
-        editedCar.setId(car.getId());
+    public void editCar(Long id, CarModel car) {
+        CarModel editedCar = carRepository.findById(id).orElseThrow(() -> new ObjectNotFoundInRepositoryException(""));
+        editedCar.setId(id);
         editedCar.setMake(car.getMake());
         editedCar.setModel(car.getModel());
         editedCar.setBodyStyle(car.getBodyStyle());
@@ -31,7 +40,7 @@ public class CarService {
         editedCar.setStatus(car.getStatus());
         editedCar.setPrice(car.getPrice());
 
-        carRepository.deleteById(car.getId());
+        carRepository.deleteById(id);
         carRepository.save(editedCar);
     }
 
@@ -39,4 +48,6 @@ public class CarService {
         carRepository.findById(id).orElseThrow(() -> new ObjectNotFoundInRepositoryException(""));
         carRepository.deleteById(id);
     }
+
+
 }
