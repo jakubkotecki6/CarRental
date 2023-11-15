@@ -16,37 +16,23 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping
-    public ResponseEntity<List<EmployeeModel>> getEmployees() {
-        //try {
-            return ResponseEntity.ok(employeeService.getAllEmployees());
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
+    public List<EmployeeModel> getEmployees() {
+        return employeeService.getAllEmployees();
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeModel> addEmployee(@RequestBody EmployeeModel employee) {
-        try {
-            EmployeeModel addedEmployee = employeeService.addEmployee(employee);
-            return ResponseEntity.ok(addedEmployee);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public EmployeeModel addEmployee(@RequestBody EmployeeModel employee) {
+        return employeeService.addEmployee(employee);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeModel> editEmployee(@PathVariable Long id, @RequestBody EmployeeModel employee) {
-        try {
-            EmployeeModel edited = employeeService.editEmployee(id, employee);
-            return ResponseEntity.ok(edited);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public EmployeeModel editEmployee(@PathVariable Long id, @RequestBody EmployeeModel employee) {
+        return employeeService.editEmployee(id, employee);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-        try{
+        try {
             employeeService.deleteEmployee(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {

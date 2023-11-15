@@ -13,21 +13,28 @@ import java.util.List;
 public class BranchService {
     private final BranchRepository branchRepository;
 
-    public BranchModel addBranch(BranchModel branch) {
-        return branchRepository.save(branch);
+    public void addBranch(BranchModel branch) {
+        branchRepository.save(branch);
     }
 
     public List<BranchModel> getAllBranches() {
         return branchRepository.findAll();
     }
 
-    public void removeBranch(BranchModel branchModel) {
-        branchRepository.delete(branchModel);
+    public void removeBranch(Long id) {
+        branchRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under that ID!"));
+        branchRepository.deleteById(id);
     }
 
     public BranchModel editBranch(Long id, BranchModel branchModel) {
-        BranchModel found = branchRepository.findById(id).get();
+        BranchModel found = branchRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under that ID!"));
+
         found.setAddress(branchModel.getAddress());
+        found.setName(branchModel.getName());
+
+        branchRepository.deleteById(id);
 
         return branchRepository.save(found);
 

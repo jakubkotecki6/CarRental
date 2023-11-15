@@ -1,14 +1,12 @@
 package pl.sda.carrental.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.carrental.model.BranchModel;
+import pl.sda.carrental.model.CarRentalModel;
 import pl.sda.carrental.service.BranchService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,44 +15,51 @@ public class BranchController {
     private final BranchService branchService;
 
     @GetMapping
-    public ResponseEntity<List<BranchModel>> getBranches() {
-        return ResponseEntity.ok(branchService.getAllBranches());
+    public List<BranchDTO> getBranches() {
+
+        return branchService.getAllBranches().stream()
+                .map(this::mapToBranchDTO)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public BranchModel getById(@PathVariable Long id) {
-        return branchService.getById(id);
+    public BranchDTO getById(@PathVariable Long id) {
+        BranchModel branch = branchService.getById(id);
+        return mapToBranchDTO(branch);
+    }
+
+    private BranchDTO mapToBranchDTO(BranchModel branch) {
+        CarRentalModel carRental = branch.getCarRental();
+        return new BranchDTO(
+                branch.getBranch_id(),
+                branch.getName(),
+                new HQDetails(
+                        carRental.getName(),
+                        carRental.getOwner(),
+                        carRental.getDomain(),
+                        carRental.getAddress()
+                )
+        );
     }
 
     @PostMapping
-    public ResponseEntity<Void> addBranch(@RequestBody BranchModel branch) {
-        if(branchService.addBranch(branch).equals(branch)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public void addBranch(@RequestBody BranchModel branch) {
+        branchService.addBranch(branch);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BranchModel> modifyBranch(@PathVariable Long id, @RequestBody BranchModel branch) {
-        Optional<BranchModel> foundBranch = branchService.getAllBranches().stream()
-                .filter(branchToModify -> branchToModify.getBranch_id() == id).findFirst();
-        if(foundBranch.isPresent()) {
-            BranchModel edited = branchService.editBranch(id, branch);
-            return ResponseEntity.ok(edited);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public BranchModel modifyBranch(@PathVariable Long id, @RequestBody BranchModel branch) {
+        return branchService.editBranch(id, branch);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeBranch(@PathVariable Long id) {
-        Optional<BranchModel> found = branchService.getAllBranches().stream().filter(branch -> branch.getBranch_id() == id).findFirst();
-        if(found.isPresent()) {
-            branchService.removeBranch(found.get());
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void removeBranch(@PathVariable Long id) {
+        branchService.removeBranch(id);
     }
+}
+
+record BranchDTO(Long branchId, String branchName, HQDetails mainBranchDetails) {
+}
+
+record HQDetails(String CarRentalName, String owner, String internetDomain, String address) {
 }
