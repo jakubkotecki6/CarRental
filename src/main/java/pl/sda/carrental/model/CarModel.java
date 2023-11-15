@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.sda.carrental.model.enums.Status;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @Entity
@@ -28,6 +29,6 @@ public class CarModel {
     private String colour;
     private int mileage;
     private Status status;
-    private BigInteger price;
+    private BigDecimal price;
 
 }
