@@ -1,6 +1,6 @@
+DROP TABLE IF EXISTS car_rental;
 DROP TABLE IF EXISTS employee_model;
 DROP TABLE IF EXISTS branch_model;
-DROP TABLE IF EXISTS car_rental;
 
 CREATE TABLE branch_model
 (
