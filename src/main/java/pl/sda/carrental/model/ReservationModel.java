@@ -28,7 +28,9 @@ public class ReservationModel {
     private String customer;
 
     @NotNull
-    private String car;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "car_id")
+    private CarModel car;
 
     @NotNull
     private LocalDate startDate;

@@ -1,5 +1,6 @@
 package pl.sda.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jdk.jfr.Name;
 import lombok.*;
@@ -17,6 +18,8 @@ public class EmployeeModel {
     private String name;
     private String surname;
     private Position position;
-//    @ManyToOne
-//    private BranchModel branch;
+    @ManyToOne
+    @JoinColumn(name = "branch_id", nullable = false)
+    @JsonBackReference
+    private BranchModel branch;
 }

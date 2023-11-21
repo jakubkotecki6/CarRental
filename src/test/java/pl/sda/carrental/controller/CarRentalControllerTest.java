@@ -17,7 +17,7 @@ class CarRentalControllerTest {
     @Test
     void shouldSaveCarRental() {
         Set<BranchModel> branches = new HashSet<>();
-        branches.add(new BranchModel(null, "Radom", " inne", null));
+        branches.add(new BranchModel(1L, "Radom", " inne", new HashSet<>(), null));
 
         CarRentalModel carRental = new CarRentalModel(
                 null,
