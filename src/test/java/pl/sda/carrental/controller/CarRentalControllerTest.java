@@ -37,6 +37,7 @@ class CarRentalControllerTest {
                 .post()
                 .uri("/carRental")
                 .bodyValue(carRental)
+
                 //when
                 .exchange()
                 //then

@@ -25,7 +25,9 @@ public class ReservationModel {
     private Long reservation_id;
 
     @NotNull
-    private String customer;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_id")
+    private ClientModel customer;
 
     @NotNull
     @OneToOne(cascade = CascadeType.ALL)
