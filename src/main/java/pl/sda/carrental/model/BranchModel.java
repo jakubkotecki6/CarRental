@@ -28,6 +28,10 @@ public class BranchModel {
     @JoinColumn(name = "branch_id")
     private Set<EmployeeModel> employees = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "branch_id")
+    private Set<CarModel> cars = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "car_rental_id", nullable = false)
     @JsonBackReference

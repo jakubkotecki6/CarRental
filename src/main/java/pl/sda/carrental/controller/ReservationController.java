@@ -17,7 +17,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ReservationModel save(@RequestBody @Valid ReservationDTO reservation) {
+    public ReservationModel saveReservation(@RequestBody @Valid ReservationDTO reservation) {
         return reservationService.saveReservation(reservation);
     }
 }
