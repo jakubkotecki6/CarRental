@@ -1,10 +1,11 @@
 DROP TABLE IF EXISTS rent;
+DROP TABLE IF EXISTS return_process;
 DROP TABLE IF EXISTS reservation;
 DROP TABLE IF EXISTS employee_model;
 DROP TABLE IF EXISTS branch_model;
 DROP TABLE IF EXISTS car_model;
 DROP TABLE IF EXISTS car_rental;
-DROP TABLE IF EXISTS return_process;
+
 
 CREATE TABLE car_rental
 (
