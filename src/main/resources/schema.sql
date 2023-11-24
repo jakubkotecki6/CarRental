@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS revenue;
 DROP TABLE IF EXISTS rent;
 DROP TABLE IF EXISTS return_process;
 DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS client_model;
 DROP TABLE IF EXISTS employee_model;
 DROP TABLE IF EXISTS car_model;
 DROP TABLE IF EXISTS branch_model;
@@ -37,8 +38,9 @@ CREATE TABLE car_model
     mileage    INT,
     status     TINYINT       NOT NULL,
     price      DECIMAL(7, 2) NOT NULL,
-    branch_id BIGINT,
-    FOREIGN KEY (branch_id) REFERENCES branch_model(branch_id)
+    branch_id  BIGINT,
+    FOREIGN KEY (branch_id) REFERENCES branch_model (branch_id)
+);
 
 CREATE TABLE employee_model
 (
@@ -50,7 +52,6 @@ CREATE TABLE employee_model
     FOREIGN KEY (branch_id) REFERENCES branch_model (branch_id)
 );
 
-DROP TABLE IF EXISTS client_model;
 CREATE TABLE client_model
 (
     client_id BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,

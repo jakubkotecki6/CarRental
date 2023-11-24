@@ -20,7 +20,8 @@ public class CarRentalService {
     }
 
     public void editCarRental(CarRentalModel carRentalModel) {
-        CarRentalModel edited = carRentalRepository.findAll().stream().findFirst().orElseThrow(() -> new ObjectNotFoundInRepositoryException("There is no car rental company to edit"));
+        CarRentalModel edited = carRentalRepository.findAll().stream().findFirst()
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("There is no car rental company to edit"));
         edited.setCar_rental_id(carRentalModel.getCar_rental_id());
         edited.setName(carRentalModel.getName());
         edited.setAddress(carRentalModel.getAddress());

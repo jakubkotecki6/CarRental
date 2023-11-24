@@ -31,13 +31,8 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-        try {
+    public void deleteEmployee(@PathVariable Long id) {
             employeeService.deleteEmployee(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 
 }

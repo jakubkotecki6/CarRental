@@ -9,10 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
-<<<<<<< HEAD
-import org.springframework.security.web.SecurityFilterChain;
-=======
->>>>>>> dev-latsko
 
 @Configuration
 @EnableWebSecurity
