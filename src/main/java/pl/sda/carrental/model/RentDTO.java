@@ -7,4 +7,5 @@ import java.time.LocalDate;
 public record RentDTO(@NotNull String employee,
                       String comments,
                       @NotNull LocalDate rentDate,
-                      @NotNull Long reservationId) {}
+                      @NotNull Long reservationId) {
+}
