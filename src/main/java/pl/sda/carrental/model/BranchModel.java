@@ -17,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "branch")
 public class BranchModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

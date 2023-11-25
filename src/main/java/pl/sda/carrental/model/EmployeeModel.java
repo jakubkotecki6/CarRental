@@ -11,6 +11,7 @@ import pl.sda.carrental.model.enums.Position;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "employee")
 public class EmployeeModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

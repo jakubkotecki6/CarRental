@@ -2,10 +2,10 @@ DROP TABLE IF EXISTS revenue;
 DROP TABLE IF EXISTS rent;
 DROP TABLE IF EXISTS return_process;
 DROP TABLE IF EXISTS reservation;
-DROP TABLE IF EXISTS client_model;
-DROP TABLE IF EXISTS employee_model;
-DROP TABLE IF EXISTS car_model;
-DROP TABLE IF EXISTS branch_model;
+DROP TABLE IF EXISTS client;
+DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS car;
+DROP TABLE IF EXISTS branch;
 DROP TABLE IF EXISTS car_rental;
 
 CREATE TABLE car_rental
@@ -18,7 +18,7 @@ CREATE TABLE car_rental
     logo          VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE branch_model
+CREATE TABLE branch
 (
     branch_id     BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     name          VARCHAR(255) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE branch_model
     FOREIGN KEY (car_rental_id) REFERENCES car_rental (car_rental_id)
 );
 
-CREATE TABLE car_model
+CREATE TABLE car
 (
     car_id     BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     make       VARCHAR(255)  NOT NULL,
@@ -39,20 +39,20 @@ CREATE TABLE car_model
     status     TINYINT       NOT NULL,
     price      DECIMAL(7, 2) NOT NULL,
     branch_id  BIGINT,
-    FOREIGN KEY (branch_id) REFERENCES branch_model (branch_id)
+    FOREIGN KEY (branch_id) REFERENCES branch (branch_id)
 );
 
-CREATE TABLE employee_model
+CREATE TABLE employee
 (
     employee_id BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
     surname     VARCHAR(255) NOT NULL,
     position    TINYINT      NOT NULL,
     branch_id   BIGINT,
-    FOREIGN KEY (branch_id) REFERENCES branch_model (branch_id)
+    FOREIGN KEY (branch_id) REFERENCES branch (branch_id)
 );
 
-CREATE TABLE client_model
+CREATE TABLE client
 (
     client_id BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
     name      VARCHAR(255) NOT NULL,
@@ -73,10 +73,10 @@ CREATE TABLE reservation
     end_branch_id   BIGINT,
     car_id             BIGINT,
     client_id BIGINT,
-    FOREIGN KEY (start_branch_id) REFERENCES branch_model (branch_id),
-    FOREIGN KEY (end_branch_id) REFERENCES branch_model (branch_id),
-    FOREIGN KEY (car_id) REFERENCES car_model (car_id),
-    FOREIGN KEY (client_id) REFERENCES client_model(client_id)
+    FOREIGN KEY (start_branch_id) REFERENCES branch (branch_id),
+    FOREIGN KEY (end_branch_id) REFERENCES branch (branch_id),
+    FOREIGN KEY (car_id) REFERENCES car (car_id),
+    FOREIGN KEY (client_id) REFERENCES client (client_id)
 );
 
 CREATE TABLE rent
