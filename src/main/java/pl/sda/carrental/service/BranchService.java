@@ -23,13 +23,13 @@ public class BranchService {
 
     public void removeBranch(Long id) {
         branchRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under that ID!"));
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under  ID #" + id));
         branchRepository.deleteById(id);
     }
 
     public BranchModel editBranch(Long id, BranchModel branchModel) {
         BranchModel found = branchRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under that ID!"));
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under  ID #" + id));
 
         found.setAddress(branchModel.getAddress());
         found.setName(branchModel.getName());
@@ -43,6 +43,6 @@ public class BranchService {
     // how to handle exceptions better
     public BranchModel getById(Long id) {
         return branchRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under that ID!"));
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under  ID #" + id));
     }
 }

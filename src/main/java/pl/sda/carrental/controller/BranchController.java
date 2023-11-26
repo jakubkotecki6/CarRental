@@ -30,6 +30,14 @@ public class BranchController {
 
     private BranchDTO mapToBranchDTO(BranchModel branch) {
         CarRentalModel carRental = branch.getCarRental();
+
+        if(branch.getCarRental() == null) {
+            return new BranchDTO(
+                    branch.getBranch_id(),
+                    branch.getName(),
+                    null);
+        }
+
         return new BranchDTO(
                 branch.getBranch_id(),
                 branch.getName(),

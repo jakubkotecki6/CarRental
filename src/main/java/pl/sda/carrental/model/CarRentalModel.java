@@ -27,6 +27,7 @@ public class CarRentalModel {
     private String address;
     private String owner;
     private String logo;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_rental_id")
     private Set<BranchModel> branches = new HashSet<>();

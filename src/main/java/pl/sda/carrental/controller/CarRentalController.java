@@ -20,8 +20,8 @@ public class CarRentalController {
         carRentalService.saveCarRental(carRentalModel);
     }
 
-    @PutMapping("/{id}")
-    public void editCarRental(@PathVariable Long id, @RequestBody CarRentalModel carRentalModel){
+    @PutMapping
+    public void editCarRental(@RequestBody CarRentalModel carRentalModel){
         carRentalService.editCarRental(carRentalModel);
     }
 
