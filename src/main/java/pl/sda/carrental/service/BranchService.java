@@ -21,6 +21,11 @@ public class BranchService {
         return branchRepository.findAll();
     }
 
+    /*  WARNING     WARNING     WARNING     WARNING     WARNING     WARNING     */
+    /*  Cannot use findById() for branches that are not assigned to CarRental   */
+    /*  =====================================================================   */
+    /*  Instead i create and delete it from CarRental perspective, where i am
+    *   able to assign it to CarRental  */
     public void removeBranch(Long id) {
         branchRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under  ID #" + id));
