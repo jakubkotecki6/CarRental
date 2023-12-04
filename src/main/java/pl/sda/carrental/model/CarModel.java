@@ -1,5 +1,6 @@
 package pl.sda.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -34,5 +35,10 @@ public class CarModel {
     @DecimalMax(value = "10000.00", message = "Price must be lesser than 10000.00")
     @Digits(integer = 7, fraction = 2, message = "Price must have up to 7 digits in total and 2 decimal places")
     private BigDecimal price;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "branch_id")
+    @JsonBackReference
+    private BranchModel branch;
 
 }

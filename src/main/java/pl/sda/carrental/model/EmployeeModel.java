@@ -21,6 +21,7 @@ public class EmployeeModel {
     private String name;
     private String surname;
     private Position position;
+
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false)
     @JsonBackReference

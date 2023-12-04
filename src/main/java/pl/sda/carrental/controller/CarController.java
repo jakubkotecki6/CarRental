@@ -9,7 +9,7 @@ import pl.sda.carrental.service.CarService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/car")
+@RequestMapping("/cars")
 @RequiredArgsConstructor
 public class CarController {
     private final CarService carService;

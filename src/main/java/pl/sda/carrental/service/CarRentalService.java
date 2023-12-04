@@ -15,7 +15,8 @@ public class CarRentalService {
     private final BranchRepository branchRepository;
 
     public CarRentalModel getCarRental() {
-        return carRentalRepository.findAll().stream().findFirst().orElseThrow(() -> new ObjectNotFoundInRepositoryException("There is no car rental company"));
+        CarRentalModel carRentalModel = carRentalRepository.findAll().stream().findFirst().orElseThrow(() -> new ObjectNotFoundInRepositoryException("There is no car rental company"));
+        return carRentalModel;
     }
 
     public void saveCarRental(CarRentalModel carRental) {

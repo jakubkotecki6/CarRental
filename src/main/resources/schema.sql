@@ -58,7 +58,9 @@ CREATE TABLE client
     name      VARCHAR(255) NOT NULL,
     surname   VARCHAR(255) NOT NULL,
     address   VARCHAR(255) NOT NULL,
-    email     VARCHAR(255) NOT NULL
+    email     VARCHAR(255) NOT NULL,
+    branch_id   BIGINT,
+    FOREIGN KEY (branch_id) REFERENCES branch (branch_id)
 );
 
 CREATE TABLE reservation
