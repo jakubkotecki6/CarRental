@@ -14,21 +14,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "client")
-public class ClientModel {
+public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long client_id;
     @NotNull(message = "name cannot be null")
     private String name;
-    @NotNull(message = "name cannot be null")
+    @NotNull(message = "surname cannot be null")
     private String surname;
-    @NotNull(message = "name cannot be null")
+    @NotNull(message = "email cannot be null")
     private String email;
-    @NotNull(message = "name cannot be null")
+    @NotNull(message = "address cannot be null")
     private String address;
 
     @ManyToOne
     @JoinColumn(name = "branch_id")
     @JsonBackReference
-    private BranchModel branch;
+    private Branch branch;
 }
