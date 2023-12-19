@@ -34,6 +34,6 @@ public class Branch {
 
     @ManyToOne
     @JoinColumn(name = "car_rental_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "carRental-reference")
     private CarRental carRental;
 }

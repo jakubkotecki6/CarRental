@@ -29,6 +29,6 @@ public class Client {
 
     @ManyToOne
     @JoinColumn(name = "branch_id")
-    @JsonBackReference
+    @JsonBackReference(value = "client-reference")
     private Branch branch;
 }
