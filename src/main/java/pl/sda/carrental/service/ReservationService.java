@@ -29,10 +29,21 @@ public class ReservationService {
     private final CarRepository carRepository;
     private final ClientRepository clientRepository;
 
+    /**
+     * Method returns all reservations
+     *
+     * @return List of all reservations
+     */
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
 
+    /**
+     * Adds new reservation to  repository
+     *
+     * @param reservationDto Reservation object which you want to add to repository
+     * @return Saves reservation in reservationRepository
+     */
     @Transactional
     public Reservation saveReservation(ReservationDTO reservationDto) {
         Reservation reservation = new Reservation();
@@ -40,6 +51,14 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+
+    /**
+     * updates old rent object found using ID with new one
+     *
+     * @param id Reservation ID
+     * @param reservationDTO new object
+     * @return Saves reservation in reservationRepository
+     */
     @Transactional
     public Reservation editReservation(Long id, ReservationDTO reservationDTO) {
         Reservation foundReservation = reservationRepository.findById(id)
@@ -48,6 +67,12 @@ public class ReservationService {
         return reservationRepository.save(foundReservation);
     }
 
+    /**
+     * Updates selected Reservation Object....
+     *
+     * @param reservationDto New reservation Object
+     * @param reservation Updated reservation
+     */
     private void updateReservationDetails(ReservationDTO reservationDto, Reservation reservation) {
         setStartEndBranch(reservationDto, reservation);
         reservation.setStartDate(reservationDto.startDate());
@@ -76,6 +101,13 @@ public class ReservationService {
         reservation.setPrice(price);
     }
 
+    /**
+     * Checks dates for errors
+     *
+     * @param reservationDto New reservation
+     * @param dtp ?
+     * @return
+     */
     private boolean isDateSuitable(ReservationDTO reservationDto, DateTimePeriod dtp) {
         return dtp.start().equals(reservationDto.startDate()) ||
                 dtp.end().equals(reservationDto.endDate()) ||
@@ -93,6 +125,12 @@ public class ReservationService {
                         dtp.end().isAfter(reservationDto.endDate()));
     }
 
+    /**
+     * Sets new start and end branches
+     *
+     * @param reservationDto object containing start and end branch
+     * @param reservation reservation object
+     */
     private void setStartEndBranch(ReservationDTO reservationDto, Reservation reservation) {
         Branch startBranch = branchRepository.findById(reservationDto.startBranchId())
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("Branch not found"));
@@ -102,6 +140,11 @@ public class ReservationService {
         reservation.setEndBranch(endBranch);
     }
 
+    /**
+     * Deletes reservation object
+     *
+     * @param id Id of selected reservation
+     */
     @Transactional
     public void deleteReservationById(Long id) {
         Reservation reservation = reservationRepository.findById(id)

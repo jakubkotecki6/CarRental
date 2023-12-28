@@ -23,10 +23,21 @@ public class ReturnService {
     private final ReturnRepository returnRepository;
     private final EmployeeRepository employeeRepository;
 
+    /**
+     * Gets all Return Objects
+     *
+     * @return List of all Return objects
+     */
     public List<Returnal> getAllReturnals() {
         return returnRepository.findAll();
     }
 
+    /**
+     * Saves Return Object
+     *
+     * @param returnDTO Return object which you want to add to repository
+     * @return saves in returnRepository
+     */
     @Transactional
     public Returnal saveReturn(ReturnDTO returnDTO) {
         List<Long> reservationsIds = returnRepository.findReturnsWithReservationId(returnDTO.reservationId());
@@ -40,6 +51,13 @@ public class ReturnService {
         return returnRepository.save(returnal);
     }
 
+    /**
+     * Updates Return Object found by ID with new one
+     *
+     * @param id ID of edited object
+     * @param returnDTO Replacement object
+     * @return saves in returnRepository
+     */
     @Transactional
     public Returnal editReturnal(Long id, ReturnDTO returnDTO) {
         Returnal returnal = returnRepository.findById(id)
@@ -49,6 +67,12 @@ public class ReturnService {
         return returnRepository.save(returnal);
     }
 
+    /**
+     *
+     *
+     * @param returnDTO
+     * @param returnalToSave
+     */
     private void updateReturnalDetails(ReturnDTO returnDTO, Returnal returnalToSave) {
 
         returnalToSave.setReturnDate(returnDTO.returnDate());
@@ -67,6 +91,11 @@ public class ReturnService {
         returnalToSave.setReservation(reservationFromRepository);
     }
 
+    /**
+     * deletes selected by ID object
+     *
+     * @param id ID of deleted object
+     */
     @Transactional
     public void deleteReturnal(Long id) {
         returnRepository.findById(id)

@@ -21,9 +21,21 @@ public class RentService {
     private final ReservationRepository reservationRepository;
     private final EmployeeRepository employeeRepository;
 
+    /**
+     * Method gets all rent objects
+     *
+     * @return List of all rent objects
+     */
     public List<Rent> allRents() {
         return rentRepository.findAll();
     }
+
+    /**
+     * Adds new Rent to repository
+     *
+     * @param rentDTO Rent object which you want to add to repository
+     * @return Saves rent in rentRepository
+     */
     public Rent save(RentDTO rentDTO) {
         Rent rent = new Rent();
         updateRentDetails(rentDTO, rent);
@@ -31,6 +43,13 @@ public class RentService {
         return rentRepository.save(rent);
     }
 
+    /**
+     * Replaces old rent object with specified ID with new updated one
+     *
+     * @param id Id of rent which you want to edit
+     * @param rentDTO rent object which will replace old record
+     * @return Saves object in rentRepository
+     */
     public Rent editRent(Long id, RentDTO rentDTO) {
         Rent rent = rentRepository.findById(id)
                         .orElseThrow(() ->
@@ -41,12 +60,23 @@ public class RentService {
         return rentRepository.save(rent);
     }
 
+    /**
+     * Deletes object with specified Id
+     *
+     * @param id Id of rent which you want to delete
+     */
     public void deleteRentById(Long id) {
         rentRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No rent under ID #" + id));
         rentRepository.deleteById(id);
     }
 
+    /**
+     * Replaces selected old rent object with new updated one
+     *
+     * @param rentDTO new rent object
+     * @param rent updated rent object
+     */
     private void updateRentDetails(RentDTO rentDTO, Rent rent) {
         List<Long> reservationsIds = rentRepository.findRentalsWithReservationId(rentDTO.reservationId());
         if(!reservationsIds.isEmpty()) {
