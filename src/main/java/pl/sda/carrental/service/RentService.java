@@ -22,19 +22,19 @@ public class RentService {
     private final EmployeeRepository employeeRepository;
 
     /**
-     * Method gets all rent objects
+     * Gets all Rent objects
      *
-     * @return List of all rent objects
+     * @return List of all Rent objects
      */
     public List<Rent> allRents() {
         return rentRepository.findAll();
     }
 
     /**
-     * Adds new Rent to repository
+     * The save method is responsible for creating a new rent based on the provided RentDTO and saving it to the repository
      *
-     * @param rentDTO Rent object which you want to add to repository
-     * @return Saves rent in rentRepository
+     * @param rentDTO An object containing rent data
+     * @return The newly created and saved rent object
      */
     public Rent save(RentDTO rentDTO) {
         Rent rent = new Rent();
@@ -44,11 +44,14 @@ public class RentService {
     }
 
     /**
-     * Replaces old rent object with specified ID with new updated one
+     * The editRent method is a transactional operation that allows for the modification of an existing rent based on the provided
+     * rent ID and updated rent details in the RentDTO. It retrieves the rent by ID from the repository, updates its details using
+     * the updateRentDetails method, deletes the existing rent, and then saves the modified rent back to the repository
      *
-     * @param id Id of rent which you want to edit
-     * @param rentDTO rent object which will replace old record
-     * @return Saves object in rentRepository
+     * @param id The identifier of the rent to be edited
+     * @param rentDTO An object containing updated rent data
+     * @return The modified rent object
+     * @throws ObjectNotFoundInRepositoryException if no rent is found with the provided ID
      */
     public Rent editRent(Long id, RentDTO rentDTO) {
         Rent rent = rentRepository.findById(id)
@@ -61,9 +64,10 @@ public class RentService {
     }
 
     /**
-     * Deletes object with specified Id
+     * Deletes Rent object using ID
      *
-     * @param id Id of rent which you want to delete
+     * @param id The identifier of the rent to be deleted
+     * @throws ObjectNotFoundInRepositoryException if no rent is found with the provided ID
      */
     public void deleteRentById(Long id) {
         rentRepository.findById(id)
@@ -72,10 +76,14 @@ public class RentService {
     }
 
     /**
-     * Replaces selected old rent object with new updated one
+     * The updateRentDetails method is responsible for updating the details of a Rent object based on the information provided in the RentDTO.
+     * It checks if a rent already exists for the specified reservation ID, updates the associated employee, comments, rent date, and
+     * reservation for the given Rent object
      *
-     * @param rentDTO new rent object
-     * @param rent updated rent object
+     * @param rentDTO An object containing updated rent data
+     * @param rent The Rent object to be updated
+     * @throws RentAlreadyExistsForReservationException if a rent already exists for the specified reservation ID
+     * @throws ObjectNotFoundInRepositoryException if no employee or reservation is found with the provided ID
      */
     private void updateRentDetails(RentDTO rentDTO, Rent rent) {
         List<Long> reservationsIds = rentRepository.findRentalsWithReservationId(rentDTO.reservationId());

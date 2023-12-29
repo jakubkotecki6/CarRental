@@ -30,9 +30,9 @@ public class ReservationService {
     private final ClientRepository clientRepository;
 
     /**
-     * Method returns all reservations
+     * Gets all Reservation Objects
      *
-     * @return List of all reservations
+     * @return List of all Reservations
      */
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
@@ -78,7 +78,7 @@ public class ReservationService {
      * associates the car and client with the reservation, calculates the price based on the reservation duration, and handles
      * potential conflicts with existing reservations
      *
-     * @param reservationDto object containing updated reservation dat
+     * @param reservationDto Object containing updated reservation dat
      * @param reservation The reservation object to be updated
      * @throws ObjectNotFoundInRepositoryException if no car or customer is found with the provided ID.
      * @throws ReservationTimeCollisionException if there are time collisions with existing reservations for the selected car
@@ -117,7 +117,7 @@ public class ReservationService {
      *
      * @param reservationDto An object containing reservation data, such as the start date and end date
      * @param dtp An object representing the time period to be checked
-     * @return  true if the period is suitable, and false otherwise
+     * @return true if the period is suitable, and false otherwise
      */
     private boolean isDateSuitable(ReservationDTO reservationDto, DateTimePeriod dtp) {
         return dtp.start().equals(reservationDto.startDate()) ||
@@ -139,8 +139,8 @@ public class ReservationService {
     /**
      * Sets new start and end branches
      *
-     * @param reservationDto object containing start and end branch data
-     * @param reservation object for which the start and end branches are to be set
+     * @param reservationDto Object containing start and end branch data
+     * @param reservation Object for which the start and end branches are to be set
      * @throws ObjectNotFoundInRepositoryException if no employee or reservation is found with the provided ID
      */
     private void setStartEndBranch(ReservationDTO reservationDto, Reservation reservation) {

@@ -14,7 +14,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     /**
-     * Method returns all Employees
+     * Gets all Employees objects
      *
      * @return List of all Employees
      */
@@ -24,21 +24,24 @@ public class EmployeeService {
 
 
     /**
-     * Adds new employee to repository
+     * The addEmployee method is responsible for adding a new employee by saving the provided Employee object to the repository
      *
-     * @param employee Employee which you want to add to repository
-     * @return  Saves employee in employeeRepository
+     * @param employee Object to be added to the repository
+     * @return The newly created and saved employee object
      */
     public Employee addEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
 
     /**
-     * Replaces old employee with new updated one
+     * The editEmployee method is a transactional operation that allows for the modification of an existing employee based on the provided
+     * employee ID and updated employee details. It retrieves the employee by ID from the repository, updates its details, deletes the
+     * existing employee, and then saves the modified employee back to the repository
      *
-     * @param id Id of employee which you want to edit
-     * @param employee Employee which will replace old record
-     * @return Saves employee in employeeRepository
+     * @param id The identifier of the employee to be edited
+     * @param employee  An object containing updated employee data
+     * @return The modified employee object
+     * @throws ObjectNotFoundInRepositoryException if no employee is found with the provided ID
      */
     public Employee editEmployee(Long id, Employee employee) {
         Employee edit = employeeRepository.findById(id)
@@ -54,9 +57,10 @@ public class EmployeeService {
     }
 
     /**
-     * deletes specified employee
+     * Deletes employee object using ID
      *
-     * @param id Id of employee which you want to delete
+     * @param id The identifier of the Employee to be deleted
+     * @throws ObjectNotFoundInRepositoryException if no employee is found with the provided ID
      */
     public void deleteEmployee(Long id) {
         employeeRepository.findById(id)
