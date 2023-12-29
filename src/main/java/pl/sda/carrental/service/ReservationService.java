@@ -35,7 +35,9 @@ public class ReservationService {
      * @return List of all Reservations
      */
     public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+        return reservationRepository.findAll().stream()
+                .map(this::mapReservationToDTO)
+                .toList();
     }
 
     /**
