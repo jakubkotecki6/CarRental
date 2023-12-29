@@ -39,10 +39,11 @@ public class ReservationService {
     }
 
     /**
-     * Adds new reservation to  repository
+     * The saveReservation method creates a new reservation, updates its details based on the provided ReservationDTO, and saves it to the
+     * repository within a transaction
      *
-     * @param reservationDto Reservation object which you want to add to repository
-     * @return Saves reservation in reservationRepository
+     * @param reservationDto An object containing reservation data
+     * @return The newly created and saved reservation object
      */
     @Transactional
     public Reservation saveReservation(ReservationDTO reservationDto) {
@@ -53,11 +54,15 @@ public class ReservationService {
 
 
     /**
-     * updates old rent object found using ID with new one
+     * The editReservation method is a transactional operation that allows for the modification of an existing reservation based on
+     * the provided reservation ID and updated reservation details in the ReservationDTO.
+     * It retrieves the reservation by ID from the repository, updates its details using the updateReservationDetails method,
+     * and then saves the modified reservation back to the repository
      *
-     * @param id Reservation ID
-     * @param reservationDTO new object
-     * @return Saves reservation in reservationRepository
+     * @param id The identifier of the reservation to be edited
+     * @param reservationDTO An object containing updated reservation data
+     * @return The modified reservation object
+     * @throws ObjectNotFoundInRepositoryException if no reservation is found with the provided ID.
      */
     @Transactional
     public Reservation editReservation(Long id, ReservationDTO reservationDTO) {
@@ -68,10 +73,15 @@ public class ReservationService {
     }
 
     /**
-     * Updates selected Reservation Object....
+     * The updateReservationDetails method is responsible for updating the details of a given reservation based on the information
+     * provided in the ReservationDTO. It sets the start and end branches, start and end dates, checks for car availability,
+     * associates the car and client with the reservation, calculates the price based on the reservation duration, and handles
+     * potential conflicts with existing reservations
      *
-     * @param reservationDto New reservation Object
-     * @param reservation Updated reservation
+     * @param reservationDto object containing updated reservation dat
+     * @param reservation The reservation object to be updated
+     * @throws ObjectNotFoundInRepositoryException if no car or customer is found with the provided ID.
+     * @throws ReservationTimeCollisionException if there are time collisions with existing reservations for the selected car
      */
     private void updateReservationDetails(ReservationDTO reservationDto, Reservation reservation) {
         setStartEndBranch(reservationDto, reservation);
@@ -102,11 +112,12 @@ public class ReservationService {
     }
 
     /**
-     * Checks dates for errors
+     * The isDateSuitable method is used to check if a given time period (DateTimePeriod) is suitable for a reservation
+     * with the provided data (ReservationDTO)
      *
-     * @param reservationDto New reservation
-     * @param dtp ?
-     * @return
+     * @param reservationDto An object containing reservation data, such as the start date and end date
+     * @param dtp An object representing the time period to be checked
+     * @return  true if the period is suitable, and false otherwise
      */
     private boolean isDateSuitable(ReservationDTO reservationDto, DateTimePeriod dtp) {
         return dtp.start().equals(reservationDto.startDate()) ||
@@ -128,8 +139,9 @@ public class ReservationService {
     /**
      * Sets new start and end branches
      *
-     * @param reservationDto object containing start and end branch
-     * @param reservation reservation object
+     * @param reservationDto object containing start and end branch data
+     * @param reservation object for which the start and end branches are to be set
+     * @throws ObjectNotFoundInRepositoryException if no employee or reservation is found with the provided ID
      */
     private void setStartEndBranch(ReservationDTO reservationDto, Reservation reservation) {
         Branch startBranch = branchRepository.findById(reservationDto.startBranchId())
@@ -141,9 +153,9 @@ public class ReservationService {
     }
 
     /**
-     * Deletes reservation object
+     * Deletes reservation object using ID
      *
-     * @param id Id of selected reservation
+     * @param id The identifier of the Reservation to be deleted
      */
     @Transactional
     public void deleteReservationById(Long id) {
