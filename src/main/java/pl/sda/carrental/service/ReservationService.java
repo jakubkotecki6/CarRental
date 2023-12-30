@@ -34,10 +34,20 @@ public class ReservationService {
      *
      * @return List of all Reservations
      */
-    public List<Reservation> getAllReservations() {
+    public List<ReservationDTO> getAllReservations() {
         return reservationRepository.findAll().stream()
                 .map(this::mapReservationToDTO)
                 .toList();
+    }
+    private ReservationDTO mapReservationToDTO(Reservation reservation) {
+        return new ReservationDTO(
+                reservation.getClient().getClient_id(),
+                reservation.getCar().getCar_id(),
+                reservation.getStartDate(),
+                reservation.getEndDate(),
+                reservation.getStartBranch().getBranch_id(),
+                reservation.getEndBranch().getBranch_id()
+        );
     }
 
     /**
