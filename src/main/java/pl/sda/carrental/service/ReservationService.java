@@ -5,19 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sda.carrental.exceptionHandling.ObjectNotFoundInRepositoryException;
 import pl.sda.carrental.exceptionHandling.ReservationTimeCollisionException;
-import pl.sda.carrental.model.Branch;
-import pl.sda.carrental.model.Car;
-import pl.sda.carrental.model.Client;
+import pl.sda.carrental.model.*;
 import pl.sda.carrental.model.DTO.ReservationDTO;
-import pl.sda.carrental.model.Reservation;
-import pl.sda.carrental.repository.BranchRepository;
-import pl.sda.carrental.repository.CarRepository;
-import pl.sda.carrental.repository.ClientRepository;
-import pl.sda.carrental.repository.ReservationRepository;
+import pl.sda.carrental.repository.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -28,6 +20,8 @@ public class ReservationService {
     private final BranchRepository branchRepository;
     private final CarRepository carRepository;
     private final ClientRepository clientRepository;
+    private final RentRepository rentRepository;
+    private final ReturnRepository returnRepository;
 
     /**
      * Gets all Reservation Objects
@@ -46,7 +40,9 @@ public class ReservationService {
                 reservation.getStartDate(),
                 reservation.getEndDate(),
                 reservation.getStartBranch().getBranch_id(),
-                reservation.getEndBranch().getBranch_id()
+                reservation.getEndBranch().getBranch_id(),
+                reservation.getRent(),
+                reservation.getReturnal()
         );
     }
 
@@ -90,37 +86,63 @@ public class ReservationService {
      * associates the car and client with the reservation, calculates the price based on the reservation duration, and handles
      * potential conflicts with existing reservations
      *
-     * @param reservationDto Object containing updated reservation dat
+     * @param reservationDto Object containing updated reservation data
      * @param reservation The reservation object to be updated
      * @throws ObjectNotFoundInRepositoryException if no car or customer is found with the provided ID.
      * @throws ReservationTimeCollisionException if there are time collisions with existing reservations for the selected car
      */
     private void updateReservationDetails(ReservationDTO reservationDto, Reservation reservation) {
-        setStartEndBranch(reservationDto, reservation);
-        reservation.setStartDate(reservationDto.startDate());
-        reservation.setEndDate(reservationDto.endDate());
+        Reservation childReservation = reservationRepository.findById(reservation.getReservationId())
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No Reservation under ID " + reservation.getReservationId()));
 
-        Car carFromRepo = carRepository.findById(reservationDto.car_id())
-                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No car under that ID"));
+        Car parentCar = childReservation.getCar();
 
-        if (!carFromRepo.getReservations().isEmpty()) {
-            List<DateTimePeriod> timeCollision = carFromRepo.getReservations().stream()
-                    .map(resObject -> new DateTimePeriod(resObject.getStartDate(), resObject.getEndDate()))
-                    .filter(dtp -> isDateSuitable(reservationDto, dtp))
-                    .toList();
-            if (!timeCollision.isEmpty()) {
-                throw new ReservationTimeCollisionException("Car cannot be reserved for given time period!");
-            }
+        if (parentCar != null){
+            Reservation editedReservation = parentCar.getReservations().stream()
+                    .filter(filteredReservation -> filteredReservation.equals(childReservation))
+                    .findFirst().orElseThrow(() -> new ObjectNotFoundInRepositoryException("No Reservation under ID "
+                            + reservation.getReservationId() + " for this Car"));
+
+            editedReservation.setReservationId(reservation.getReservationId());
+            setClient(reservationDto, reservation);
+            setCar(reservationDto, editedReservation);
+            setStartBranch(reservationDto, editedReservation);
+            setEndBranch(reservationDto, editedReservation);
+            editedReservation.setStartDate(reservationDto.startDate());
+            editedReservation.setEndDate(reservationDto.endDate());
+
+            carRepository.save(parentCar);
+            reservationRepository.save(editedReservation);
         }
-        reservation.setCar(carFromRepo);
 
-        Client clientFromRepo = clientRepository.findById(reservationDto.customer_id())
-                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No customer under that ID"));
-        reservation.setClient(clientFromRepo);
 
-        long daysDifference = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
-        BigDecimal price = carFromRepo.getPrice().multiply(BigDecimal.valueOf(daysDifference));
-        reservation.setPrice(price);
+
+
+//        setStartEndBranch(reservationDto, reservation);
+//        reservation.setStartDate(reservationDto.startDate());
+//        reservation.setEndDate(reservationDto.endDate());
+//
+//        Car carFromRepo = carRepository.findById(reservationDto.car_id())
+//                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No car under that ID"));
+//
+//        if (!carFromRepo.getReservations().isEmpty()) {
+//            List<DateTimePeriod> timeCollision = carFromRepo.getReservations().stream()
+//                    .map(resObject -> new DateTimePeriod(resObject.getStartDate(), resObject.getEndDate()))
+//                    .filter(dtp -> isDateSuitable(reservationDto, dtp))
+//                    .toList();
+//            if (!timeCollision.isEmpty()) {
+//                throw new ReservationTimeCollisionException("Car cannot be reserved for given time period!");
+//            }
+//        }
+//        reservation.setCar(carFromRepo);
+//
+//        Client clientFromRepo = clientRepository.findById(reservationDto.customer_id())
+//                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No customer under that ID"));
+//        reservation.setClient(clientFromRepo);
+//
+//        long daysDifference = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
+//        BigDecimal price = carFromRepo.getPrice().multiply(BigDecimal.valueOf(daysDifference));
+//        reservation.setPrice(price);
     }
 
     /**
@@ -148,17 +170,39 @@ public class ReservationService {
                         dtp.end().isAfter(reservationDto.endDate()));
     }
 
+    private void setClient(ReservationDTO reservationDto, Reservation reservation){
+        Client client = clientRepository.findById(reservationDto.customer_id())
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("Client not found"));
+        reservation.setClient(client);
+    }
+
+    private void setCar(ReservationDTO reservationDto, Reservation reservation){
+        Car car = carRepository.findById(reservationDto.car_id())
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("Car not found"));
+        reservation.setCar(car);
+    }
+
     /**
      * Sets new start and end branches
      *
-     * @param reservationDto Object containing start and end branch data
-     * @param reservation Object for which the start and end branches are to be set
+     * @param reservationDto Object containing start branch data
+     * @param reservation Object for which the startbranch are to be set
      * @throws ObjectNotFoundInRepositoryException if no employee or reservation is found with the provided ID
      */
-    private void setStartEndBranch(ReservationDTO reservationDto, Reservation reservation) {
+    private void setStartBranch(ReservationDTO reservationDto, Reservation reservation) {
         Branch startBranch = branchRepository.findById(reservationDto.startBranchId())
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("Branch not found"));
         reservation.setStartBranch(startBranch);
+    }
+
+    /**
+     * Sets new end branch
+     *
+     * @param reservationDto Object containing end branch data
+     * @param reservation Object for which the end branch are to be set
+     * @throws ObjectNotFoundInRepositoryException if no employee or reservation is found with the provided ID
+     */
+    private void setEndBranch(ReservationDTO reservationDto, Reservation reservation) {
         Branch endBranch = branchRepository.findById(reservationDto.endBranchId())
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("Branch not found"));
         reservation.setEndBranch(endBranch);
@@ -173,6 +217,7 @@ public class ReservationService {
     public void deleteReservationById(Long id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No reservation under ID #" + id));
+
         reservationRepository.delete(reservation);
     }
 }

@@ -48,18 +48,18 @@ public class RentService {
      * rent ID and updated rent details in the RentDTO. It retrieves the rent by ID from the repository, updates its details using
      * the updateRentDetails method, deletes the existing rent, and then saves the modified rent back to the repository
      *
-     * @param id The identifier of the rent to be edited
+     * @param id      The identifier of the rent to be edited
      * @param rentDTO An object containing updated rent data
      * @return The modified rent object
      * @throws ObjectNotFoundInRepositoryException if no rent is found with the provided ID
      */
     public Rent editRent(Long id, RentDTO rentDTO) {
         Rent rent = rentRepository.findById(id)
-                        .orElseThrow(() ->
-                                new ObjectNotFoundInRepositoryException("No rent under ID #" + id));
+                .orElseThrow(() ->
+                        new ObjectNotFoundInRepositoryException("No rent under ID #" + id));
+
         updateRentDetails(rentDTO, rent);
 
-        rentRepository.deleteById(id);
         return rentRepository.save(rent);
     }
 
@@ -81,13 +81,13 @@ public class RentService {
      * reservation for the given Rent object
      *
      * @param rentDTO An object containing updated rent data
-     * @param rent The Rent object to be updated
+     * @param rent    The Rent object to be updated
      * @throws RentAlreadyExistsForReservationException if a rent already exists for the specified reservation ID
-     * @throws ObjectNotFoundInRepositoryException if no employee or reservation is found with the provided ID
+     * @throws ObjectNotFoundInRepositoryException      if no employee or reservation is found with the provided ID
      */
     private void updateRentDetails(RentDTO rentDTO, Rent rent) {
         List<Long> reservationsIds = rentRepository.findRentalsWithReservationId(rentDTO.reservationId());
-        if(!reservationsIds.isEmpty()) {
+        if (!reservationsIds.isEmpty()) {
             throw new RentAlreadyExistsForReservationException("Rent already exists for reservation with id "
                     + rentDTO.reservationId());
         }
@@ -99,11 +99,5 @@ public class RentService {
         rent.setEmployee(foundEmployee);
         rent.setComments(rentDTO.comments());
         rent.setRentDate(rentDTO.rentDate());
-
-        Reservation reservationFromRepository = reservationRepository.findById(rentDTO.reservationId())
-                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("Reservation with id "
-                        + rentDTO.reservationId() + " not found"));
-
-        rent.setReservation(reservationFromRepository);
     }
 }
