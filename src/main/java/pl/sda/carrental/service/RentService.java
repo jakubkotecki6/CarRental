@@ -99,5 +99,11 @@ public class RentService {
         rent.setEmployee(foundEmployee);
         rent.setComments(rentDTO.comments());
         rent.setRentDate(rentDTO.rentDate());
+
+        Reservation reservationFromRepository = reservationRepository.findById(rentDTO.reservationId())
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("Reservation with id "
+                        + rentDTO.reservationId() + " not found"));
+
+        rent.setReservation(reservationFromRepository);
     }
 }
