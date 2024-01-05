@@ -1,5 +1,6 @@
 package pl.sda.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,9 +24,11 @@ public class Rent {
 
     @OneToOne
     @JoinColumn(name = "employee_id")
+    @JsonBackReference(value = "rentEmployee-reference")
     private Employee employee;
 
     @OneToOne
     @JoinColumn(name = "reservation_id")
+    @JsonBackReference(value = "rentReservation-reference")
     private Reservation reservation;
 }
