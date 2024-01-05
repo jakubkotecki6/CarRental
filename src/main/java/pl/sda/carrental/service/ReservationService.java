@@ -9,7 +9,9 @@ import pl.sda.carrental.model.*;
 import pl.sda.carrental.model.DTO.ReservationDTO;
 import pl.sda.carrental.repository.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -92,7 +94,7 @@ public class ReservationService {
      * @throws ReservationTimeCollisionException if there are time collisions with existing reservations for the selected car
      */
     private void updateReservationDetails(ReservationDTO reservationDto, Reservation reservation) {
-        Reservation childReservation = reservationRepository.findById(reservation.getReservationId())
+        /*Reservation childReservation = reservationRepository.findById(reservation.getReservationId())
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No Reservation under ID " + reservation.getReservationId()));
 
         Car parentCar = childReservation.getCar();
@@ -113,36 +115,37 @@ public class ReservationService {
 
             carRepository.save(parentCar);
             reservationRepository.save(editedReservation);
+        }*/
+
+
+
+
+        setStartBranch(reservationDto, reservation);
+        setEndBranch(reservationDto, reservation);
+        reservation.setStartDate(reservationDto.startDate());
+        reservation.setEndDate(reservationDto.endDate());
+
+        Car carFromRepo = carRepository.findById(reservationDto.car_id())
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No car under that ID"));
+
+        if (!carFromRepo.getReservations().isEmpty()) {
+            List<DateTimePeriod> timeCollision = carFromRepo.getReservations().stream()
+                    .map(resObject -> new DateTimePeriod(resObject.getStartDate(), resObject.getEndDate()))
+                    .filter(dtp -> isDateSuitable(reservationDto, dtp))
+                    .toList();
+            if (!timeCollision.isEmpty()) {
+                throw new ReservationTimeCollisionException("Car cannot be reserved for given time period!");
+            }
         }
+        reservation.setCar(carFromRepo);
 
+        Client clientFromRepo = clientRepository.findById(reservationDto.customer_id())
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No customer under that ID"));
+        reservation.setClient(clientFromRepo);
 
-
-
-//        setStartEndBranch(reservationDto, reservation);
-//        reservation.setStartDate(reservationDto.startDate());
-//        reservation.setEndDate(reservationDto.endDate());
-//
-//        Car carFromRepo = carRepository.findById(reservationDto.car_id())
-//                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No car under that ID"));
-//
-//        if (!carFromRepo.getReservations().isEmpty()) {
-//            List<DateTimePeriod> timeCollision = carFromRepo.getReservations().stream()
-//                    .map(resObject -> new DateTimePeriod(resObject.getStartDate(), resObject.getEndDate()))
-//                    .filter(dtp -> isDateSuitable(reservationDto, dtp))
-//                    .toList();
-//            if (!timeCollision.isEmpty()) {
-//                throw new ReservationTimeCollisionException("Car cannot be reserved for given time period!");
-//            }
-//        }
-//        reservation.setCar(carFromRepo);
-//
-//        Client clientFromRepo = clientRepository.findById(reservationDto.customer_id())
-//                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No customer under that ID"));
-//        reservation.setClient(clientFromRepo);
-//
-//        long daysDifference = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
-//        BigDecimal price = carFromRepo.getPrice().multiply(BigDecimal.valueOf(daysDifference));
-//        reservation.setPrice(price);
+        long daysDifference = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
+        BigDecimal price = carFromRepo.getPrice().multiply(BigDecimal.valueOf(daysDifference));
+        reservation.setPrice(price);
     }
 
     /**

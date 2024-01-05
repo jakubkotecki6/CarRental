@@ -63,7 +63,7 @@ public class Reservation {
     @JsonBackReference(value = "rentReservation-reference")
     private Rent rent;
 
-    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "return_id")
     @JsonBackReference(value = "rentReservation-reference")
     private Returnal returnal;

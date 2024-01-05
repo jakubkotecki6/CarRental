@@ -73,6 +73,7 @@ CREATE TABLE reservation
     end_branch_id   BIGINT,
     car_id          BIGINT,
     client_id       BIGINT,
+    return_id       BIGINT,
     FOREIGN KEY (start_branch_id) REFERENCES branch (branch_id),
     FOREIGN KEY (end_branch_id) REFERENCES branch (branch_id),
     FOREIGN KEY (car_id) REFERENCES car (car_id),
