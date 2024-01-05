@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import pl.sda.carrental.exceptionHandling.ObjectNotFoundInRepositoryException;
 import pl.sda.carrental.model.Branch;
 import pl.sda.carrental.model.Car;
-import pl.sda.carrental.model.Rent;
-import pl.sda.carrental.model.Returnal;
 import pl.sda.carrental.repository.BranchRepository;
 import pl.sda.carrental.repository.CarRepository;
 import pl.sda.carrental.repository.RentRepository;
@@ -100,16 +98,6 @@ public class CarService {
     public void deleteCarById(Long id) {
         carRepository.findById(id).orElseThrow(() ->
                 new ObjectNotFoundInRepositoryException("No car under ID #" + id));
-
-        List<Rent> rentsAssociatedWithCar = rentRepository.findAll().stream()
-                .filter(rent -> rent.getReservation().getCar().getCar_id().equals(id))
-                .toList();
-        List<Returnal> returnsAssociatedWithCar = returnRepository.findAll().stream()
-                .filter(returnal -> returnal.getReservation().getCar().getCar_id().equals(id))
-                .toList();
-
-        rentRepository.deleteAll(rentsAssociatedWithCar);
-        returnRepository.deleteAll(returnsAssociatedWithCar);
 
         carRepository.deleteById(id);
     }
