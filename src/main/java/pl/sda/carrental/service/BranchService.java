@@ -7,9 +7,11 @@ import pl.sda.carrental.exceptionHandling.ObjectNotFoundInRepositoryException;
 import pl.sda.carrental.model.Branch;
 import pl.sda.carrental.model.Car;
 import pl.sda.carrental.model.Employee;
+import pl.sda.carrental.model.Reservation;
 import pl.sda.carrental.repository.BranchRepository;
 import pl.sda.carrental.repository.CarRepository;
 import pl.sda.carrental.repository.EmployeeRepository;
+import pl.sda.carrental.repository.ReservationRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +22,7 @@ public class BranchService {
     private final BranchRepository branchRepository;
     private final CarRepository carRepository;
     private final EmployeeRepository employeeRepository;
+    private final ReservationRepository reservationRepository;
 
     /**
      * Adds a new branch to the repository.
@@ -53,6 +56,13 @@ public class BranchService {
         Branch branch = branchRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under  ID #" + id));
 
+        List<Reservation> reservationsWithThisBranch = reservationRepository.findAll().stream()
+                .filter(reservation -> reservation.getStartBranch().getBranch_id().equals(id) ||
+                        reservation.getEndBranch().getBranch_id().equals(id))
+                .toList();
+
+        reservationRepository.deleteAll(reservationsWithThisBranch);
+
         branch.getClients().clear();
         branch.getCars().clear();
         branch.getEmployees().clear();
@@ -76,8 +86,6 @@ public class BranchService {
 
         found.setAddress(branch.getAddress());
         found.setName(branch.getName());
-
-        branchRepository.deleteById(id);
 
         return branchRepository.save(found);
     }

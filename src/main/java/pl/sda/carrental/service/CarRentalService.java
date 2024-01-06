@@ -7,14 +7,19 @@ import pl.sda.carrental.exceptionHandling.CarRentalAlreadyExistsException;
 import pl.sda.carrental.exceptionHandling.ObjectNotFoundInRepositoryException;
 import pl.sda.carrental.model.Branch;
 import pl.sda.carrental.model.CarRental;
+import pl.sda.carrental.model.Reservation;
 import pl.sda.carrental.repository.BranchRepository;
 import pl.sda.carrental.repository.CarRentalRepository;
+import pl.sda.carrental.repository.ReservationRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CarRentalService {
     private final CarRentalRepository carRentalRepository;
     private final BranchRepository branchRepository;
+    private final ReservationRepository reservationRepository;
 
     /**
      * Retrieves the car rental company details.
@@ -118,6 +123,13 @@ public class CarRentalService {
     public void closeBranchUnderId(Long id) {
         Branch branch = branchRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under  ID #" + id));
+
+        List<Reservation> reservationsWithThisBranch = reservationRepository.findAll().stream()
+                .filter(reservation -> reservation.getStartBranch().getBranch_id().equals(id) ||
+                        reservation.getEndBranch().getBranch_id().equals(id))
+                .toList();
+
+        reservationRepository.deleteAll(reservationsWithThisBranch);
 
         branch.getClients().clear();
         branch.getCars().clear();
