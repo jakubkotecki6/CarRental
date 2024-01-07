@@ -8,10 +8,7 @@ import pl.sda.carrental.model.Branch;
 import pl.sda.carrental.model.Car;
 import pl.sda.carrental.model.Employee;
 import pl.sda.carrental.model.Reservation;
-import pl.sda.carrental.repository.BranchRepository;
-import pl.sda.carrental.repository.CarRepository;
-import pl.sda.carrental.repository.EmployeeRepository;
-import pl.sda.carrental.repository.ReservationRepository;
+import pl.sda.carrental.repository.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +20,7 @@ public class BranchService {
     private final CarRepository carRepository;
     private final EmployeeRepository employeeRepository;
     private final ReservationRepository reservationRepository;
+    private final CarRentalRepository carRentalRepository;
 
     /**
      * Adds a new branch to the repository.
@@ -30,8 +28,9 @@ public class BranchService {
      * @param branch The Branch object to be added.
      */
     public void addBranch(Branch branch) {
-        if(!branchRepository.findAll().isEmpty()) {
-            throw new ObjectAlreadyAssignedToBranchException("Rent already exists!");
+        if(!carRentalRepository.findAll().isEmpty()) {
+            branch.setCarRental(carRentalRepository.findAll().stream().findFirst().orElseThrow(() ->
+                    new ObjectNotFoundInRepositoryException("No Car Rental for branch to be assigned to")));
         }
         branchRepository.save(branch);
     }
