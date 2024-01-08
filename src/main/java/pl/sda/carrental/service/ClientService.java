@@ -1,5 +1,6 @@
 package pl.sda.carrental.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.sda.carrental.exceptionHandling.ObjectAlreadyAssignedToBranchException;
@@ -45,6 +46,7 @@ public class ClientService {
      *
      * @param client The Client object representing the new client to be added.
      */
+    @Transactional
     public void addClient(Client client) {
         clientRepository.save(client);
     }
@@ -60,6 +62,7 @@ public class ClientService {
      * @return The updated Client object.
      * @throws ObjectNotFoundInRepositoryException if no client is found under the provided ID.
      */
+    @Transactional
     public void editClient(Long id, Client client) {
         Client childClient = clientRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No client under that ID!"));
@@ -92,6 +95,7 @@ public class ClientService {
      * @param id The ID of the client to be removed.
      * @throws ObjectNotFoundInRepositoryException if no client is found under the provided ID.
      */
+    @Transactional
     public void removeClient(Long id) {
         clientRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No client under that ID!"));
@@ -125,6 +129,7 @@ public class ClientService {
      * @throws ObjectNotFoundInRepositoryException    if no client or branch is found under the provided IDs.
      * @throws ObjectAlreadyAssignedToBranchException if the client is already assigned to an existing branch.
      */
+    @Transactional
     public void assignClientToBranch(Long clientId, Long branchId) {
         Client foundClient = clientRepository.findById(clientId)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No client under ID #" + clientId));
@@ -149,6 +154,7 @@ public class ClientService {
      * @param branchId The ID of the branch from which the client will be removed.
      * @throws ObjectNotFoundInRepositoryException if no branch or client is found under the provided IDs.
      */
+    @Transactional
     public void removeClientFromBranch(Long clientId, Long branchId) {
         Branch foundBranch = branchRepository.findById(branchId)
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under ID #" + branchId));
