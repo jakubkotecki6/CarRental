@@ -23,13 +23,13 @@ public class RevenueController {
         return revenueService.addRevenue(revenue);
     }
 
-    @PutMapping("/{id}")
-    public Revenue editRevenue(@PathVariable Long id, @RequestBody Revenue revenue) {
-        return revenueService.editRevenue(id, revenue);
+    @PutMapping
+    public Revenue editRevenue(@RequestBody Revenue revenue) {
+        return revenueService.editRevenue(revenue);
     }
 
-    @DeleteMapping ("/{id}")
-    void deleteRevenue(@PathVariable Long id) {
-        revenueService.deleteRevenue(id);
+    @DeleteMapping
+    public void deleteRevenue() {
+        revenueService.deleteRevenue();
     }
 }

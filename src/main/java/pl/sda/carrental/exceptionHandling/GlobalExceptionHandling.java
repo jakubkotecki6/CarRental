@@ -42,8 +42,8 @@ public class GlobalExceptionHandling {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
     }
 
-    @ExceptionHandler(CarRentalAlreadyExistsException.class)
-    public ProblemDetail handleCarRentalAlreadyExistsException(CarRentalAlreadyExistsException exception) {
+    @ExceptionHandler(ObjectAlreadyExistsException.class)
+    public ProblemDetail handleCarRentalAlreadyExistsException(ObjectAlreadyExistsException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
     }
 

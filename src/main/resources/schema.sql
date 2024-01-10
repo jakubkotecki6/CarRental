@@ -94,7 +94,7 @@ CREATE TABLE rent
 CREATE TABLE revenue
 (
     revenue_id BIGINT AUTO_INCREMENT UNIQUE PRIMARY KEY,
-    amount     DECIMAL
+    total_amount     DECIMAL
 );
 
 CREATE TABLE return_process
