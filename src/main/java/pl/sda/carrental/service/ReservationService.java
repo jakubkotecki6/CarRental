@@ -13,6 +13,7 @@ import pl.sda.carrental.model.Reservation;
 import pl.sda.carrental.repository.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -25,8 +26,7 @@ public class ReservationService {
     private final BranchRepository branchRepository;
     private final CarRepository carRepository;
     private final ClientRepository clientRepository;
-    private final RentRepository rentRepository;
-    private final ReturnRepository returnRepository;
+    private final BigDecimal CROSS_LOCATION_CHARGE = new BigDecimal("100.00");
 
     /**
      * Gets all Reservation Objects
@@ -40,6 +40,7 @@ public class ReservationService {
     }
     private ReservationDTO mapReservationToDTO(Reservation reservation) {
         return new ReservationDTO(
+                reservation.getReservationId(),
                 reservation.getClient().getClient_id(),
                 reservation.getCar().getCar_id(),
                 reservation.getStartDate(),
@@ -97,12 +98,12 @@ public class ReservationService {
      * @throws ReservationTimeCollisionException if there are time collisions with existing reservations for the selected car
      */
     private void updateReservationDetails(ReservationDTO reservationDto, Reservation reservation) {
-        setStartEndBranch(reservationDto, reservation);
-        reservation.setStartDate(reservationDto.startDate());
-        reservation.setEndDate(reservationDto.endDate());
-
         Car carFromRepo = carRepository.findById(reservationDto.car_id())
                 .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No car under that ID"));
+
+        Client clientFromRepo = clientRepository.findById(reservationDto.customer_id())
+                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No customer under that ID"));
+
 
         if (!carFromRepo.getReservations().isEmpty()) {
             List<DateTimePeriod> timeCollision = carFromRepo.getReservations().stream()
@@ -113,14 +114,18 @@ public class ReservationService {
                 throw new ReservationTimeCollisionException("Car cannot be reserved for given time period!");
             }
         }
-        reservation.setCar(carFromRepo);
-
-        Client clientFromRepo = clientRepository.findById(reservationDto.customer_id())
-                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No customer under that ID"));
-        reservation.setClient(clientFromRepo);
 
         long daysDifference = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
         BigDecimal price = carFromRepo.getPrice().multiply(BigDecimal.valueOf(daysDifference));
+        if(!reservationDto.startBranchId().equals(reservationDto.endBranchId())) {
+            price = price.add(CROSS_LOCATION_CHARGE);
+        }
+
+        setStartEndBranch(reservationDto, reservation);
+        reservation.setStartDate(reservationDto.startDate());
+        reservation.setEndDate(reservationDto.endDate());
+        reservation.setCar(carFromRepo);
+        reservation.setClient(clientFromRepo);
         reservation.setPrice(price);
     }
 

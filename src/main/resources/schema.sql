@@ -35,7 +35,7 @@ CREATE TABLE car
     body_style VARCHAR(255)  NOT NULL,
     year       INT,
     colour     VARCHAR(255)  NOT NULL,
-    mileage    INT,
+    mileage    DOUBLE,
     status     TINYINT       NOT NULL,
     price      DECIMAL(9, 2) NOT NULL,
     branch_id  BIGINT,
