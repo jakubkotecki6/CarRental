@@ -122,12 +122,12 @@ public class ReservationService {
         if(!reservationDto.startBranchId().equals(reservationDto.endBranchId())) {
             price = price.add(CROSS_LOCATION_CHARGE);
         }
-        revenueService.updateRevenue(price);
 
         setStartEndBranch(reservationDto, reservation);
         reservation.setCar(carFromRepo);
         reservation.setClient(clientFromRepo);
         reservation.setPrice(price);
+        revenueService.updateRevenue(reservation.getCar().getBranch().getRevenue().getRevenue_id(), price);
     }
 
     /**
@@ -200,12 +200,12 @@ public class ReservationService {
         if(reservation.getRent() != null) {
             long daysBetween = Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), reservation.getRent().getRentDate()));
             if(daysBetween >= 2) {
-                revenueService.updateRevenue(reservation.getPrice().negate());
+                revenueService.updateRevenue(reservation.getCar().getBranch().getRevenue().getRevenue_id(), reservation.getPrice().negate());
             } else {
-                revenueService.updateRevenue(reservation.getPrice().negate().multiply(BigDecimal.valueOf(0.8)));
+                revenueService.updateRevenue(reservation.getCar().getBranch().getRevenue().getRevenue_id(), reservation.getPrice().negate().multiply(BigDecimal.valueOf(0.8)));
             }
         } else {
-            revenueService.updateRevenue(reservation.getPrice().negate());
+            revenueService.updateRevenue(reservation.getCar().getBranch().getRevenue().getRevenue_id(), reservation.getPrice().negate());
         }
     }
 }
