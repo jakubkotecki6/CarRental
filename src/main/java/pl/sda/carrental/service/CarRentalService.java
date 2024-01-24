@@ -4,16 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.sda.carrental.exceptionHandling.BranchAlreadyOpenInCityException;
-import pl.sda.carrental.exceptionHandling.CarRentalAlreadyExistsException;
+import pl.sda.carrental.exceptionHandling.ObjectAlreadyExistsException;
 import pl.sda.carrental.exceptionHandling.ObjectNotFoundInRepositoryException;
 import pl.sda.carrental.model.Branch;
 import pl.sda.carrental.model.CarRental;
-import pl.sda.carrental.model.Reservation;
 import pl.sda.carrental.repository.BranchRepository;
 import pl.sda.carrental.repository.CarRentalRepository;
 import pl.sda.carrental.repository.ReservationRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +18,7 @@ public class CarRentalService {
     private final CarRentalRepository carRentalRepository;
     private final BranchRepository branchRepository;
     private final ReservationRepository reservationRepository;
+    private final BranchService branchService;
 
     /**
      * Retrieves the car rental company details.
@@ -39,12 +37,12 @@ public class CarRentalService {
      * Saves or updates the details of the car rental company.
      *
      * @param carRental The CarRental object representing the car rental company to be saved or updated.
-     * @throws CarRentalAlreadyExistsException if there already is car rental in repository
+     * @throws ObjectAlreadyExistsException if there already is car rental in repository
      */
     @Transactional
     public void saveCarRental(CarRental carRental) {
         if(!carRentalRepository.findAll().isEmpty()) {
-            throw new CarRentalAlreadyExistsException("Car Rental already exists!");
+            throw new ObjectAlreadyExistsException("Car Rental already exists!");
         }
         carRentalRepository.save(carRental);
     }
@@ -127,20 +125,6 @@ public class CarRentalService {
      */
     @Transactional
     public void closeBranchUnderId(Long id) {
-        Branch branch = branchRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundInRepositoryException("No branch under  ID #" + id));
-
-        List<Reservation> reservationsWithThisBranch = reservationRepository.findAll().stream()
-                .filter(reservation -> reservation.getStartBranch().getBranch_id().equals(id) ||
-                        reservation.getEndBranch().getBranch_id().equals(id))
-                .toList();
-
-        reservationRepository.deleteAll(reservationsWithThisBranch);
-
-        branch.getClients().clear();
-        branch.getCars().clear();
-        branch.getEmployees().clear();
-
-        branchRepository.deleteById(id);
+        branchService.removeBranch(id);
     }
 }

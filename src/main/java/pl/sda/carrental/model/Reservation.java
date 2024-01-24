@@ -6,10 +6,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,10 +16,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
+@With
 @Table(name = "reservation")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reservation_id")
     private Long reservationId;
 
     @NotNull
@@ -38,9 +37,11 @@ public class Reservation {
     private Car car;
 
     @NotNull
+    @Column(name = "start_date")
     private LocalDate startDate;
 
     @NotNull
+    @Column(name = "end_date")
     private LocalDate endDate;
 
     @DecimalMin(value = "1.00", message = "Price must be greater than 1.00")
@@ -59,12 +60,10 @@ public class Reservation {
     private Branch endBranch;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "rent_id")
     @JsonBackReference(value = "reservationRent-reference")
     private Rent rent;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "return_id")
     @JsonBackReference(value = "reservationReturnal-reference")
     private Returnal returnal;
 }

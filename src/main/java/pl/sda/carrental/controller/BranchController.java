@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.sda.carrental.model.Branch;
 import pl.sda.carrental.model.Car;
 import pl.sda.carrental.model.CarRental;
+import pl.sda.carrental.model.DTO.CarDTO;
 import pl.sda.carrental.service.BranchService;
 
 import java.util.List;
@@ -29,18 +30,23 @@ public class BranchController {
         return mapToBranchDTO(branch);
     }
 
+    @GetMapping("/{id}/availableCarsOnDate/{date}")
+    public List<CarDTO> getCarsAvailableOnDate(@PathVariable Long id, @PathVariable String date) {
+        return branchService.getCarsAvailableAtBranchOnDate(id, date);
+    }
+
     private BranchDTO mapToBranchDTO(Branch branch) {
         CarRental carRental = branch.getCarRental();
 
         if(branch.getCarRental() == null) {
             return new BranchDTO(
-                    branch.getBranch_id(),
+                    branch.getBranchId(),
                     branch.getName(),
                     null);
         }
 
         return new BranchDTO(
-                branch.getBranch_id(),
+                branch.getBranchId(),
                 branch.getName(),
                 new HQDetails(
                         carRental.getName(),
@@ -91,7 +97,15 @@ public class BranchController {
         branchService.assignEmployeeToBranch(employee_id, branch_id);
     }
 
+    @PatchMapping("/assignManager/{manager_id}/forBranch/{branch_id}")
+    public void assignManagerForBranch(@PathVariable Long manager_id, @PathVariable Long branch_id) {
+        branchService.addManagerForBranch(manager_id, branch_id);
+    }
 
+    @PatchMapping("/removeManagerFromBranch/{branch_id}")
+    public void removeManagerFromBranch(@PathVariable Long branch_id) {
+        branchService.removeManagerFromBranch(branch_id);
+    }
 }
 
 record BranchDTO(Long branchId, String branchName, HQDetails mainBranchDetails) {

@@ -6,10 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import pl.sda.carrental.model.enums.Status;
 
 import java.math.BigDecimal;
@@ -21,17 +18,20 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@With
 @Table(name = "car")
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long car_id;
+    @Column(name = "car_id")
+    private Long carId;
     private String make;
     private String model;
+    @Column(name = "body_style")
     private String bodyStyle;
     private int year;
     private String colour;
-    private int mileage;
+    private double mileage;
     private Status status;
     @DecimalMin(value = "1.00", message = "Price must be grater than 1.00")
     @DecimalMax(value = "10000.00", message = "Price must be lesser than 10000.00")

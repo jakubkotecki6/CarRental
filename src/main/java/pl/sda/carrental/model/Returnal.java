@@ -23,7 +23,8 @@ public class Returnal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long return_id;
+    @Column(name = "return_id")
+    private Long returnId;
     private String comments;
     private LocalDate returnDate;
 

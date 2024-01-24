@@ -17,7 +17,8 @@ import pl.sda.carrental.model.enums.Position;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long employee_id;
+    @Column(name = "employee_id")
+    private Long employeeId;
     private String name;
     private String surname;
     private Position position;

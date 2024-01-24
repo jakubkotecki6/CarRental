@@ -3,21 +3,20 @@ package pl.sda.carrental.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@With
 @Table(name = "client")
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long client_id;
+    @Column(name = "client_id")
+    private Long clientId;
     @NotNull(message = "name cannot be null")
     private String name;
     @NotNull(message = "surname cannot be null")
